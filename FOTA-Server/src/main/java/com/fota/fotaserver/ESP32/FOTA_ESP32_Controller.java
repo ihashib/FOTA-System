@@ -1,12 +1,8 @@
 package com.fota.fotaserver.ESP32;
 
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -35,7 +31,7 @@ public class FOTA_ESP32_Controller {
                                               @PathVariable(name = "securityCode") String securityCode) {
         return fotaEsp32Service.getVersion(model, deviceId, securityCode);
     }
-    @GetMapping(value = "api/get/esp32/{model}/{deviceId}/{secrurityCode}/fota/update")     
+    @GetMapping(value = "api/get/esp32/{model}/{deviceId}/{secrurityCode}/fota/update")
     public ResponseEntity<FOTA_ESP32> update(@PathVariable(name = "model") String model,
                                            @PathVariable(name = "deviceId") String deviceId,
                                            @PathVariable(name = "secrurityCode") String securityCode){
