@@ -39,7 +39,7 @@ public class FOTA_ESP32_Service {
             return new ResponseEntity("NO_CONTENT", HttpStatus.OK);
     }
 
-    public ResponseEntity<Resource> getUpdate(String model, String deviceId, String securityCode){
+    public ResponseEntity<FOTA_ESP32> getUpdate(String model, String deviceId, String securityCode){
         Boolean deviceSecure = true;
         //check if device id matches with existing devices
         //check if security code of that device matches
@@ -53,7 +53,7 @@ public class FOTA_ESP32_Service {
         FOTA_ESP32 update = fotaEsp32Repo.getFirmwareByModel(model);
 
         if(fotaEsp32Repo.count() > 0)
-            return new ResponseEntity<Resource>((Resource) update, HttpStatus.OK);  //-----could cause issues
+            return new ResponseEntity<FOTA_ESP32>(update, HttpStatus.OK);
         else
             return new ResponseEntity("NO_CONTENT", HttpStatus.OK);
     }
@@ -61,12 +61,9 @@ public class FOTA_ESP32_Service {
     //Front end
     public String createFOTA(FOTA_ESP32 fotaEsp32){
         //insert data
-        if(!fotaEsp32Repo.existsById(fotaEsp32.getId())) {
-            fotaEsp32Repo.insert(fotaEsp32);
-            return "DONE";
-        }
+        fotaEsp32Repo.insert((fotaEsp32));
 
-        return "ERROR";
+        return "DONE";
     }
     public List<FOTA_ESP32> readAllFOTA(){
         return fotaEsp32Repo.findAll();

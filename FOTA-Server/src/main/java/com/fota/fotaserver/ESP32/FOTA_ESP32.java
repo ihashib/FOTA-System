@@ -3,9 +3,7 @@ package com.fota.fotaserver.ESP32;
 import lombok.Data;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Repository;
 
 @Data
 @Document(collection = "ESP32")
@@ -26,8 +24,23 @@ public class FOTA_ESP32 {
     public FOTA_ESP32() {
     }
 
-    public FOTA_ESP32(String deviceModel, String md5CheckSum, String buildData, String buildNum, String fileSize,
+    public FOTA_ESP32(String id, String deviceModel, String md5CheckSum, String buildData, String buildNum, String fileSize,
                               String serverPath, String updateStatus, String updateCompleteTime, String errorMessage, Binary file) {
+        this.id = id;
+        this.deviceModel = deviceModel;
+        this.md5CheckSum = md5CheckSum;
+        this.buildData = buildData;
+        this.buildNum = buildNum;
+        this.fileSize = fileSize;
+        this.serverPath = serverPath;
+        this.updateStatus = updateStatus;
+        this.updateCompleteTime = updateCompleteTime;
+        this.errorMessage = errorMessage;
+        this.file = file;
+    }
+
+    public FOTA_ESP32(String deviceModel, String md5CheckSum, String buildData, String buildNum, String fileSize,
+                      String serverPath, String updateStatus, String updateCompleteTime, String errorMessage, Binary file) {
         this.deviceModel = deviceModel;
         this.md5CheckSum = md5CheckSum;
         this.buildData = buildData;

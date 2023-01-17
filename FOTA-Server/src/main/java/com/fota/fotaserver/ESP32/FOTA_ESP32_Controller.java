@@ -35,10 +35,10 @@ public class FOTA_ESP32_Controller {
                                               @PathVariable(name = "securityCode") String securityCode) {
         return fotaEsp32Service.getVersion(model, deviceId, securityCode);
     }
-    @GetMapping(value = "api/get/esp32/{model}/{deviceId}/{secrurityCode}/fota/update")     //may have issues
-    public ResponseEntity<Resource> update(@PathVariable(name = "model") String model,
+    @GetMapping(value = "api/get/esp32/{model}/{deviceId}/{secrurityCode}/fota/update")     
+    public ResponseEntity<FOTA_ESP32> update(@PathVariable(name = "model") String model,
                                            @PathVariable(name = "deviceId") String deviceId,
-                                           @PathVariable(name = "securityCode") String securityCode){
+                                           @PathVariable(name = "secrurityCode") String securityCode){
         return fotaEsp32Service.getUpdate(model, deviceId, securityCode);
     }
 
@@ -47,11 +47,11 @@ public class FOTA_ESP32_Controller {
     public String create(@RequestBody FOTA_ESP32 fotaEsp32){
         return fotaEsp32Service.createFOTA(fotaEsp32);
     }
-    @PostMapping(value = "api/get/esp32/fota/readAll")
+    @GetMapping(value = "api/get/esp32/fota/readAll")
     public List<FOTA_ESP32> readAll(){
         return fotaEsp32Service.readAllFOTA();
     }
-    @PostMapping(value = "api/get/esp32/fota/readByModel/{model}")
+    @GetMapping(value = "api/get/esp32/fota/readByModel/{model}")
     public FOTA_ESP32 readByModel(@PathVariable(name = "model") String model){
         return fotaEsp32Service.readFOTAByModel(model);
     }
