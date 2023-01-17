@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 import javax.management.Query;
 import java.sql.SQLOutput;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class FOTA_ESP32_Service {
     private final FOTA_ESP32_Repo fotaEsp32Repo;
 
+    //hardware end
     public ResponseEntity<FOTA_ESP32> getVersion(String model, String deviceId, String securityCode){
         Boolean deviceSecure = true;
         //check if device id matches with existing devices
@@ -54,5 +56,53 @@ public class FOTA_ESP32_Service {
             return new ResponseEntity<Resource>((Resource) update, HttpStatus.OK);  //-----could cause issues
         else
             return new ResponseEntity("NO_CONTENT", HttpStatus.OK);
+    }
+
+    //Front end
+    public String createFOTA(FOTA_ESP32 fotaEsp32){
+        //insert data
+        if(!fotaEsp32Repo.existsById(fotaEsp32.getId())) {
+            fotaEsp32Repo.insert(fotaEsp32);
+            return "DONE";
+        }
+
+        return "ERROR";
+    }
+    public List<FOTA_ESP32> readAllFOTA(){
+        return fotaEsp32Repo.findAll();
+    }
+    public FOTA_ESP32 readFOTAByModel(String model){
+        return fotaEsp32Repo.getFirmwareByModel(model);
+    }
+    public String updateFOTA(String model, FOTA_ESP32 fotaEsp32){
+        FOTA_ESP32 ins = fotaEsp32Repo.getFirmwareByModel(model);
+        Optional<FOTA_ESP32> fotaEsp32Optional = fotaEsp32Repo.findById(ins.getId());
+        if(fotaEsp32Optional.isPresent())
+        {
+            FOTA_ESP32 update = fotaEsp32Optional.get();
+            update.setMd5CheckSum(fotaEsp32.getMd5CheckSum() != null ? fotaEsp32.getMd5CheckSum():update.getMd5CheckSum());
+            update.setBuildData(fotaEsp32.getBuildData() != null ? fotaEsp32.getBuildData() : update.getBuildData());
+            update.setBuildNum(fotaEsp32.getBuildNum() != null ? fotaEsp32.getBuildNum() : update.getBuildNum());
+            update.setFileSize(fotaEsp32.getFileSize() != null ? fotaEsp32.getFileSize() : update.getFileSize());
+            update.setFile(fotaEsp32.getFile() != null ? fotaEsp32.getFile() : update.getFile());
+
+            fotaEsp32Repo.save(update);
+
+            return "Updated, id: "+update.getId()+" model: "+update.getDeviceModel();
+        }
+        else
+        {
+            return "No matching model found";
+        }
+    }
+    public String deleteFOTA(String model){
+        try {
+            FOTA_ESP32 ins = fotaEsp32Repo.getFirmwareByModel(model);
+            fotaEsp32Repo.deleteById(ins.getId());
+            return "Deleted model" + ins.getId() + " model: " + ins.getDeviceModel();
+        }
+        catch (Exception e){
+            return "Delete Failed"+e;
+        }
     }
 }
